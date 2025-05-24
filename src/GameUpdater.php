@@ -61,8 +61,10 @@
                 'debug'   => false,
                 'proxy'   => $this->proxy,
             ]);
-            
-            Downloader::initLogger('download_log', true, true);
+
+            Downloader::initLogger('download_log', $this->debug, $this->redisLogEnable);
+            ini_set('memory_limit', '512M');
+
             Downloader::setRedis(db: $this->redisDbIndex);
 
             $this->initWpManager();
@@ -757,6 +759,10 @@
 
                     if (str_contains($origin_url, 'riotpixels.net'))
                     {
+                        $origin_url = strtr($origin_url, [
+                            'http:' => 'https:',
+                        ]);
+
                         $ins->setRawHeader($this->headerStr);
                         $urls = [
                             $origin_url,
@@ -923,6 +929,10 @@ AAA
 
                     if (str_contains($origin_url, 'riotpixels.net'))
                     {
+                        $origin_url = strtr($origin_url, [
+                            'http:' => 'https:',
+                        ]);
+
                         $ins->setRawHeader($this->headerStr);
                         $urls = [
                             $origin_url,
@@ -1802,7 +1812,6 @@ AAA
             }
 
             return $destPathToSave;
-
         }
 
 
