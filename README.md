@@ -1,1 +1,9 @@
-# coco-fitDownloader
+## usage
+
+see examples folder
+
+---
+
+## License
+
+MIT
