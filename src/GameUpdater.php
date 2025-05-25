@@ -757,11 +757,14 @@
                     $ins->baseCacheStrategy();
                     $ins->setConcurrency($this->concurrency);
 
+
+                    $origin_url = strtr($origin_url, [
+                        'http:' => 'https:',
+                    ]);
+
                     if (str_contains($origin_url, 'riotpixels.net'))
                     {
-                        $origin_url = strtr($origin_url, [
-                            'http:' => 'https:',
-                        ]);
+
 
                         $ins->setRawHeader($this->headerStr);
                         $urls = [
@@ -927,12 +930,12 @@ AAA
                     $ins->baseCacheStrategy();
                     $ins->setConcurrency($this->concurrency);
 
+                    $origin_url = strtr($origin_url, [
+                        'http:' => 'https:',
+                    ]);
+
                     if (str_contains($origin_url, 'riotpixels.net'))
                     {
-                        $origin_url = strtr($origin_url, [
-                            'http:' => 'https:',
-                        ]);
-
                         $ins->setRawHeader($this->headerStr);
                         $urls = [
                             $origin_url,
