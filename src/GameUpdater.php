@@ -37,6 +37,7 @@
         public string $redisLogName;
         public bool   $redisLogEnable = false;
         public int    $redisDbIndex   = 11;
+        public array  $infoUrlMap     = [];
 
         /**********************************************************************************/
         public Manager     $wpManager;
@@ -259,6 +260,9 @@
             try
             {
                 $cover_link = $crawler->filter('.entry-content a img')->first()->attr('src');
+                $cover_link = strtr($cover_link, [
+                    'http:' => 'https:',
+                ]);
             }
             catch (\Exception $exception)
             {
@@ -287,6 +291,11 @@
                 if (isset($matches[1]))
                 {
                     $info_url = 'https://en.riotpixels.com/games/' . $matches[1];
+
+                    if (isset($this->infoUrlMap[$info_url]))
+                    {
+                        $info_url = trim($this->infoUrlMap[$info_url], '/\\');
+                    }
                 }
             }
             catch (\Exception $exception)
@@ -358,7 +367,6 @@
                 "features"       => "",
                 "description"    => "",
                 "1337x_url"      => "",
-                "info_url"       => "",
                 "download_links" => "",
                 "website_links"  => [],
                 "updates_links"  => "",
@@ -433,7 +441,13 @@
                     preg_match('%https?://[\da-z]+.riotpixels.com/games/([^/]+)%im', $v, $matches);
                     if (isset($matches[1]))
                     {
-                        $result['info_url'] = 'https://en.riotpixels.com/games/' . $matches[1];
+                        $info_url = 'https://en.riotpixels.com/games/' . $matches[1];
+
+                        if (isset($this->infoUrlMap[$info_url]))
+                        {
+                            $info_url = trim($this->infoUrlMap[$info_url], '/\\');
+                        }
+                        $result['info_url'] = $info_url;
                     }
                 }
 
@@ -638,7 +652,11 @@
                     preg_match('%https?://[^"]+%imu', $t, $matches);
                     if (isset($matches[0]) && ($matches[0]))
                     {
-                        $result[$gameTable->getCoverLinkField()] = preg_replace('#\.\d+p\.jpg#', '', $matches[0]);
+                        $t1 = preg_replace('#\.\d+p\.jpg#', '', $matches[0]);
+
+                        $result[$gameTable->getCoverLinkField()] = strtr($t1, [
+                            'http:' => 'https:',
+                        ]);
                     }
 
                     $res = $gameTable->tableIns()
@@ -683,9 +701,13 @@
 
                 foreach ($pages as $k => $pageInfo)
                 {
-                    $ins->addBatchRequest($pageInfo[$gameTable->getInfoUrlField()] . '/', 'get', [
-                        "proxy" => $this->proxy,
-                    ]);
+                    $info_url = $pageInfo[$gameTable->getInfoUrlField()];
+                    if ($info_url)
+                    {
+                        $ins->addBatchRequest($info_url . '/', 'get', [
+                            "proxy" => $this->proxy,
+                        ]);
+                    }
                 }
 
                 $ins->send();
@@ -757,15 +779,8 @@
                     $ins->baseCacheStrategy();
                     $ins->setConcurrency($this->concurrency);
 
-
-                    $origin_url = strtr($origin_url, [
-                        'http:' => 'https:',
-                    ]);
-
                     if (str_contains($origin_url, 'riotpixels.net'))
                     {
-
-
                         $ins->setRawHeader($this->headerStr);
                         $urls = [
                             $origin_url,
@@ -929,10 +944,6 @@ AAA
                     $ins->setCachePath($this->cachePath);
                     $ins->baseCacheStrategy();
                     $ins->setConcurrency($this->concurrency);
-
-                    $origin_url = strtr($origin_url, [
-                        'http:' => 'https:',
-                    ]);
 
                     if (str_contains($origin_url, 'riotpixels.net'))
                     {
@@ -1116,6 +1127,10 @@ AAA
                 {
                     foreach ($matches[1] as $k => $v)
                     {
+                        $v = strtr($v, [
+                            'http:' => 'https:',
+                        ]);
+
                         $data[] = [
                             $gameImagesTable->getPkField()      => $gameImagesTable->calcPk(),
                             $gameImagesTable->getPathField()    => $v,
