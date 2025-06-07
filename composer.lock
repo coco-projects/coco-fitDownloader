@@ -508,16 +508,16 @@
         },
         {
             "name": "coco-project/wp",
-            "version": "v1.0.25",
+            "version": "v1.0.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/coco-projects/wp.git",
-                "reference": "73b7e99c23d931f5b1e82d4ba7576b0cf5a34bb6"
+                "reference": "90dca9c60b4b72dc2340fa6c5f8d0fd909fa19b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/coco-projects/wp/zipball/73b7e99c23d931f5b1e82d4ba7576b0cf5a34bb6",
-                "reference": "73b7e99c23d931f5b1e82d4ba7576b0cf5a34bb6",
+                "url": "https://api.github.com/repos/coco-projects/wp/zipball/90dca9c60b4b72dc2340fa6c5f8d0fd909fa19b9",
+                "reference": "90dca9c60b4b72dc2340fa6c5f8d0fd909fa19b9",
                 "shasum": ""
             },
             "require": {
@@ -544,9 +544,9 @@
             ],
             "support": {
                 "issues": "https://github.com/coco-projects/wp/issues",
-                "source": "https://github.com/coco-projects/wp/tree/v1.0.25"
+                "source": "https://github.com/coco-projects/wp/tree/v1.0.26"
             },
-            "time": "2025-06-06T13:47:29+00:00"
+            "time": "2025-06-07T07:01:52+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
